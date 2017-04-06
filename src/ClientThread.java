@@ -162,6 +162,25 @@ public class ClientThread extends Thread{
 					//edit message, current message = /m name message. we want current message = message
 					inLine = inLine.split(" ", 3)[2];
 					messagePrivate(inLine, recipient);
+				} 
+				else if (inLine.startsWith("/v")){
+					//Create new File Chooser and initiate its pop up
+					final JFileChooser fc = new JFileChooser();
+					int option = fc.showDialog(null, "Attach");
+          
+					if (option == JFileChooser.APPROVE_OPTION) {
+						String recipient = inLine.split(" ")[1];
+						//instantiate file
+						File selectedFile = fc.getSelectedFile();
+						//Get size of file
+						double kilobytes = (selectedFile.length())/(1024);
+						//Inform Users file has been uploaded
+						messagePrivate(" Uploaded file: "+selectedFile.getName()+" ("+kilobytes+" KB) .", recipient);            
+						//Copy File to Server ("Uploads Folder")
+						String path = selectedFile.getAbsolutePath();
+						moveTheFile(path);
+
+					}
 				} else{//send the message to all of the users as a public message
 					 messageAll(inLine, false);
 				}
